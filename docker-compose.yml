@@ -1,0 +1,13 @@
+services:
+  docforge-ai:
+    build: .
+    ports:
+      - "8008:8008"
+    environment:
+      - AIDOC_WEB_HOST=0.0.0.0
+      - AIDOC_WEB_PORT=8008
+      - AIDOC_LOG_DIR=/app/logs
+    volumes:
+      - ./logs:/app/logs
+      - ./webapp/runtime:/app/webapp/runtime
+      - ./webapp/uploads:/app/webapp/uploads

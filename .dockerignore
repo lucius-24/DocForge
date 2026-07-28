@@ -1,0 +1,33 @@
+# Local development artifacts
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.venv
+.env
+.git
+.gitignore
+.vscode
+.idea
+*.log
+logs/
+
+# Local GUI assets (not needed for Web)
+assets/
+ui/
+app.spec
+build/
+dist/
+*.exe
+
+# Test files
+test_*.py
+
+# Windows specific
+thumbs.db
+desktop.ini
+
+# Docker build artifacts
+Dockerfile
+docker-compose.yml
+docker-compose.cloud.yml

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">DocForge</title>
+  <desc id="desc">Blue and purple document mark with a white DF monogram</desc>
+  <defs>
+    <linearGradient id="document" x1="0.05" y1="0.95" x2="0.95" y2="0.05">
+      <stop offset="0" stop-color="#0c2b91"/>
+      <stop offset="0.52" stop-color="#3f38df"/>
+      <stop offset="1" stop-color="#c026f4"/>
+    </linearGradient>
+    <linearGradient id="page" x1="0.1" y1="1" x2="0.9" y2="0">
+      <stop offset="0" stop-color="#2684ff"/>
+      <stop offset="1" stop-color="#8b2cf6"/>
+    </linearGradient>
+  </defs>
+  <path d="M25 9h62l25 25v69c0 9-7 16-16 16H25c-9 0-16-7-16-16V25c0-9 7-16 16-16z" fill="url(#document)"/>
+  <path d="M87 9v17c0 6 5 11 11 11h14L87 9z" fill="#dc32ff"/>
+  <path d="M16 104l96-38v37c0 9-7 16-16 16H25c-4 0-7-1-9-3z" fill="url(#page)" opacity=".9"/>
+  <path d="M31 42h24c18 0 29 10 29 24S73 91 55 91H31zm15 13v23h9c8 0 13-4 13-12s-5-11-13-11zM84 42h30v13H99v8h13v12H99v16H84z" fill="#fff"/>
+</svg>

@@ -1,0 +1,21 @@
+services:
+  docforge-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # 如果宿主机已经安装了 typst 并映射进来，可以设置为 "1" 跳过下载
+        # 默认设置为 "0" 尝试下载
+        AIDOC_SKIP_TYPST_DOWNLOAD: "1"
+    ports:
+      - "8008:8008"
+    volumes:
+      # Persist user templates and runtime data
+      - ./webapp/uploads:/app/webapp/uploads
+      - ./webapp/runtime:/app/webapp/runtime
+      # 如果宿主机已经有 typst，请取消下面这行的注释并修改为你宿主机上的实际路径
+      - /usr/local/bin/typst:/usr/local/bin/typst:ro
+    environment:
+      - AIDOC_WEB_HOST=0.0.0.0
+      - AIDOC_WEB_PORT=8008
+    restart: unless-stopped

@@ -1,0 +1,10 @@
+customtkinter
+pypandoc
+pyperclip
+python-docx
+packaging
+tkinterweb
+Pillow
+fastapi
+uvicorn
+python-multipart

@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+.venv/
+.pytest_cache/
+
+# Local editor and agent state
+.trae/
+.superpowers/
+.vscode/
+.idea/
+
+# Runtime data
+logs/
+webapp/runtime/
+webapp/uploads/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# Build and release artifacts
+build/
+dist/
+*.exe
+*.zip
+typst-x86_64-pc-windows-msvc/
+
+# Operating-system files
+Thumbs.db
+Desktop.ini
+.DS_Store

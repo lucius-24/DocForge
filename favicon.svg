@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
+  <title id="title">DocForge</title>
+  <desc id="desc">Compact blue and purple DF document icon</desc>
+  <defs>
+    <linearGradient id="favicon-gradient" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#1649d8"/>
+      <stop offset="1" stop-color="#bd28ef"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="56" height="56" rx="13" fill="url(#favicon-gradient)"/>
+  <path d="M40 4v9c0 6 4 10 10 10h10L40 4z" fill="#f049ff"/>
+  <path d="M14 23h13c10 0 16 5 16 14S37 51 27 51H14zm9 8v12h4c4 0 7-2 7-6s-3-6-7-6zM42 23h13v8h-5v4h5v7h-5v9h-8z" fill="#fff"/>
+</svg>

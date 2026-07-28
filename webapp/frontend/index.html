@@ -1,0 +1,1050 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DocForge | 专为 AI 时代打造的 Markdown 锻造引擎</title>
+    <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg?v=2" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/logo.svg?v=2" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              panel: "#0b1220",
+              panel2: "#0f1a33",
+              panel3: "#0b1022",
+              neon: "#00e5ff",
+              neon2: "#7c3aed",
+              text: "#dbeafe",
+              subtext: "#93c5fd",
+              border: "rgba(148,163,184,.16)",
+            },
+            boxShadow: {
+              glow: "0 0 0 1px rgba(0,229,255,.16), 0 0 40px rgba(0,229,255,.12)",
+              glow2: "0 0 0 1px rgba(124,58,237,.20), 0 0 40px rgba(124,58,237,.14)",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      html,
+      body {
+        height: 100%;
+        background: radial-gradient(1200px 600px at 10% 10%, rgba(0,229,255,.14), transparent 50%),
+          radial-gradient(900px 600px at 90% 20%, rgba(124,58,237,.14), transparent 55%),
+          #060b18;
+        color: #dbeafe;
+      }
+      .theme-light body {
+        background: #f6f7f9;
+        color: #0b1220;
+      }
+      .theme-light .grid-bg {
+        opacity: .22;
+        mask-image: radial-gradient(760px 760px at 30% 10%, black 18%, transparent 88%);
+      }
+      .grid-bg {
+        background-image: linear-gradient(to right, rgba(148,163,184,.08) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(148,163,184,.08) 1px, transparent 1px);
+        background-size: 56px 56px;
+        mask-image: radial-gradient(500px 500px at 30% 10%, black 30%, transparent 80%);
+      }
+      .glass {
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+      }
+      .neon-border {
+        position: relative;
+        border-radius: 18px;
+      }
+      .neon-border:before {
+        content: "";
+        position: absolute;
+        inset: -1px;
+        border-radius: 18px;
+        padding: 1px;
+        background: linear-gradient(120deg, rgba(0,229,255,.55), rgba(124,58,237,.55), rgba(0,229,255,.55));
+        background-size: 200% 200%;
+        animation: flow 6s linear infinite;
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+      }
+      .theme-light .neon-border:before {
+        animation: none;
+        background: linear-gradient(120deg, rgba(15,23,42,.16), rgba(15,23,42,.10), rgba(15,23,42,.16));
+      }
+      @keyframes flow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      .icon {
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+      }
+      iframe { background: transparent; }
+      .cm-host { height: 100%; }
+      .cm-editor { height: 100%; }
+      .cm-scroller { overflow: auto; }
+      .dark-scroll::-webkit-scrollbar,
+      .cm-scroller::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+      }
+      .dark-scroll::-webkit-scrollbar-track,
+      .cm-scroller::-webkit-scrollbar-track {
+        background: rgba(15, 26, 51, .65);
+      }
+      .dark-scroll::-webkit-scrollbar-thumb,
+      .cm-scroller::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, rgba(0,229,255,.35), rgba(124,58,237,.35));
+        border-radius: 999px;
+        border: 2px solid rgba(15, 26, 51, .65);
+      }
+      .dark-scroll::-webkit-scrollbar-thumb:hover,
+      .cm-scroller::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, rgba(0,229,255,.55), rgba(124,58,237,.55));
+      }
+      .theme-light .dark-scroll::-webkit-scrollbar-track,
+      .theme-light .cm-scroller::-webkit-scrollbar-track {
+        background: rgba(15, 23, 42, 0.06);
+      }
+      .theme-light .dark-scroll::-webkit-scrollbar-thumb,
+      .theme-light .cm-scroller::-webkit-scrollbar-thumb {
+        background: rgba(15, 23, 42, 0.18);
+        border: 2px solid rgba(255, 255, 255, 0.92);
+      }
+      .theme-light .dark-scroll::-webkit-scrollbar-thumb:hover,
+      .theme-light .cm-scroller::-webkit-scrollbar-thumb:hover {
+        background: rgba(15, 23, 42, 0.28);
+      }
+      select, option {
+        color: #dbeafe;
+        background-color: rgba(15, 26, 51, .95);
+      }
+      .theme-light select, .theme-light option {
+        color: #0b1220;
+        background-color: rgba(255,255,255,.95);
+      }
+      .theme-light .text-subtext { color: rgba(30, 41, 59, 0.70) !important; }
+      .theme-light .border-border { border-color: rgba(15, 23, 42, 0.10) !important; }
+      .theme-light [class*="bg-panel/55"] { background-color: rgba(255,255,255,.92) !important; }
+      .theme-light [class*="bg-panel2/60"] { background-color: rgba(255,255,255,.92) !important; }
+      .theme-light [class*="bg-panel2/50"] { background-color: rgba(255,255,255,.92) !important; }
+      .theme-light [class*="bg-panel3/60"] { background-color: rgba(248,250,252,.96) !important; }
+      .theme-light .shadow-glow { box-shadow: 0 1px 10px rgba(2, 6, 23, .06) !important; }
+      .theme-light .shadow-glow2 { box-shadow: 0 1px 10px rgba(2, 6, 23, .06) !important; }
+      .theme-light #btnPreview {
+        background: rgba(255,255,255,.92) !important;
+        color: #0b1220 !important;
+        border: 1px solid rgba(15, 23, 42, 0.10) !important;
+      }
+      .theme-light #btnPreview:hover { background: rgba(255,255,255,1) !important; }
+      .theme-light #btnPreview svg { stroke: #0b1220 !important; }
+      textarea {
+        font-family: "Microsoft YaHei", "微软雅黑", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      }
+      .df-surface {
+        background-color: rgba(11, 18, 32, 0.55) !important;
+      }
+      .theme-light .df-surface {
+        background-color: rgba(255, 255, 255, 0.92) !important;
+      }
+      .theme-light .df-muted {
+        color: rgba(30, 41, 59, 0.78) !important;
+      }
+      .theme-light #advDialog,
+      .theme-light #modal {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border-color: rgba(15, 23, 42, 0.16) !important;
+        box-shadow: 0 10px 28px rgba(2, 6, 23, .12) !important;
+      }
+      .theme-light #advDialog .text-subtext {
+        color: rgba(30, 41, 59, 0.85) !important;
+      }
+      .theme-light #advDialog input,
+      .theme-light #advDialog select {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border-color: rgba(15, 23, 42, 0.16) !important;
+      }
+      .theme-light #advDialog #advClose,
+      .theme-light #advDialog #advReset,
+      .theme-light #modal #modalClose {
+        background: #f8fafc !important;
+        color: #0f172a !important;
+        border-color: rgba(15, 23, 42, 0.16) !important;
+      }
+      .df-footer {
+        background: #060b18 !important;
+        color: #94a3b8;
+        border-top: none;
+      }
+      .theme-light .df-footer {
+        background: #ffffff !important;
+        color: #475569 !important;
+        border-top: none !important;
+      }
+      #btnSyncScroll {
+        pointer-events: auto;
+      }
+    </style>
+  </head>
+  <body class="h-full">
+    <div class="grid-bg fixed inset-0 pointer-events-none"></div>
+    <div class="max-w-[1800px] mx-auto h-full p-5">
+      <header class="neon-border glass bg-panel/55 shadow-glow px-4 py-3 flex items-center justify-between gap-3 df-surface">
+        <div class="flex items-center gap-3 min-w-[260px]">
+          <img src="/logo.svg" alt="DocForge" class="h-14 w-14 rounded-2xl shadow-glow bg-panel2/60 border border-border" />
+          <div>
+            <div class="text-lg font-semibold tracking-wide">DocForge</div>
+            <div class="text-subtext text-xs df-muted">Markdown → Word / PDF</div>
+          </div>
+        </div>
+
+        <div class="flex-1 flex items-center gap-2 justify-center">
+          <div class="flex items-center gap-2 rounded-xl border border-border bg-panel2/60 px-3 py-2">
+            <span class="text-xs text-subtext">模板</span>
+            <select id="templateSelect" class="bg-transparent text-sm outline-none">
+              <option value="academic">学术风</option>
+              <option value="internet">互联网风</option>
+              <option value="official">公文风</option>
+            </select>
+            <div class="h-5 w-px bg-border mx-1"></div>
+            <label class="text-xs px-2 py-1 rounded-lg border border-border hover:bg-panel3/60 cursor-pointer flex items-center gap-2">
+              <svg class="icon text-neon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 3v10"></path>
+                <path d="M7 8l5-5 5 5"></path>
+                <path d="M4 14v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"></path>
+              </svg>
+              <span>上传模板</span>
+              <input id="templateUpload" type="file" accept=".docx" class="hidden" />
+            </label>
+            <div class="h-5 w-px bg-border mx-1"></div>
+            <input id="filenameBase" class="text-xs px-3 py-2 rounded-xl border border-border bg-panel2/60 hover:bg-panel2/80 outline-none w-[220px]" placeholder="文件名（默认取一级标题）" />
+            <button id="btnExportWord" class="text-xs px-4 py-2 rounded-xl bg-gradient-to-r from-[#0066ff] to-[#0052cc] hover:from-[#0052cc] hover:to-[#003d99] text-white font-semibold flex items-center gap-2 shadow-lg shadow-blue-500/20">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h10l4 4v12H4z"></path>
+                <path d="M14 4v4h4"></path>
+                <path d="M7 14l2 3 2-6 2 6 2-3"></path>
+              </svg>
+              <span>导出 Word</span>
+            </button>
+            <button id="btnExportPdf" class="text-xs px-4 py-2 rounded-xl bg-gradient-to-r from-[#7c3aed] to-[#6d28d9] hover:from-[#6d28d9] hover:to-[#5b21b6] text-white font-semibold flex items-center gap-2 shadow-lg shadow-purple-500/20">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h10l4 4v12H4z"></path>
+                <path d="M14 4v4h4"></path>
+                <path d="M7 15c0-2 1-4 4-4s4 2 4 4-1 4-4 4-4-2-4-4z"></path>
+              </svg>
+              <span>导出 PDF</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 min-w-[260px] justify-end">
+          <button id="btnAdvanced" class="px-3 py-2 rounded-xl border border-border bg-panel2/60 hover:bg-panel2/80 transition text-sm flex items-center gap-2">
+            <svg class="icon text-neon2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path>
+              <path d="M19.4 15a7.8 7.8 0 0 0 .1-1 7.8 7.8 0 0 0-.1-1l2-1.5-2-3.5-2.4 1a8 8 0 0 0-1.7-1l-.4-2.6h-4l-.4 2.6a8 8 0 0 0-1.7 1l-2.4-1-2 3.5 2 1.5a7.8 7.8 0 0 0-.1 1 7.8 7.8 0 0 0 .1 1l-2 1.5 2 3.5 2.4-1a8 8 0 0 0 1.7 1l.4 2.6h4l.4-2.6a8 8 0 0 0 1.7-1l2.4 1 2-3.5-2-1.5z"></path>
+            </svg>
+            <span>高级</span>
+          </button>
+          <button id="btnTheme" class="px-3 py-2 rounded-xl border border-border bg-panel2/60 hover:bg-panel2/80 transition text-sm shadow-glow flex items-center gap-2" title="切换浅色模式">
+            <svg id="themeIcon" class="icon text-neon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2v4"></path>
+              <path d="M12 18v4"></path>
+              <path d="M4.93 4.93l2.83 2.83"></path>
+              <path d="M16.24 16.24l2.83 2.83"></path>
+              <path d="M2 12h4"></path>
+              <path d="M18 12h4"></path>
+              <path d="M4.93 19.07l2.83-2.83"></path>
+              <path d="M16.24 7.76l2.83-2.83"></path>
+              <path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path>
+            </svg>
+            <span>主题</span>
+          </button>
+        </div>
+      </header>
+
+      <div id="splitWrap" class="mt-4 flex gap-4 h-[calc(100%-92px)] min-h-0">
+        <section id="leftPane" class="neon-border glass bg-panel/55 shadow-glow p-4 flex flex-col min-h-0 df-surface" style="flex: 0 0 50%;">
+          <div class="flex items-center justify-between mb-3">
+            <div class="text-sm font-semibold">编辑区</div>
+            <div class="flex items-center gap-2">
+              <label class="text-xs px-3 py-2 rounded-xl border border-border bg-panel2/60 hover:bg-panel2/80 cursor-pointer flex items-center gap-2">
+                <svg class="icon text-neon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"></path>
+                </svg>
+                <span>打开.md</span>
+                <input id="mdUpload" type="file" accept=".md,.markdown,.mdown,text/markdown" class="hidden" />
+              </label>
+              <button id="btnPreview" class="text-xs px-3 py-2 rounded-xl bg-gradient-to-r from-neon to-neon2 text-black font-semibold hover:opacity-90 transition flex items-center gap-2">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"></path>
+                  <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"></path>
+                </svg>
+                <span>预览</span>
+              </button>
+              <button id="btnClear" class="text-xs px-3 py-2 rounded-xl border border-border bg-panel2/60 hover:bg-panel2/80 flex items-center gap-2">
+                <svg class="icon text-neon2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18"></path>
+                  <path d="M8 6V4h8v2"></path>
+                  <path d="M6 6l1 16h10l1-16"></path>
+                  <path d="M10 11v6"></path>
+                  <path d="M14 11v6"></path>
+                </svg>
+                <span>清空</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="flex-1 min-h-0 rounded-xl border border-border bg-panel2/50 overflow-hidden">
+            <div id="cmRoot" class="cm-host h-full hidden"></div>
+            <textarea id="fallbackTextarea" class="dark-scroll h-full w-full resize-none bg-transparent p-3 text-sm outline-none"
+              placeholder="# 在此粘贴 Markdown 内容...\n\n拖拽 .md 到页面任意区域也可加载"></textarea>
+          </div>
+
+          <div class="mt-3 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3 min-w-0">
+              <div id="status" class="text-xs text-subtext break-all">就绪</div>
+              <button id="btnSyncScroll" class="text-xs px-2 py-1 rounded-lg border border-border bg-panel2/60 hover:bg-panel2/80" title="同步滚动">
+                🔗 同步滚动
+              </button>
+              <span id="wordCount" class="text-xs text-slate-600 dark:text-slate-500"></span>
+            </div>
+            <div class="text-xs text-subtext">Ctrl+Enter 预览 · Ctrl+S 导出</div>
+          </div>
+          <div class="mt-2 h-2 w-full rounded-full bg-panel3/60 border border-border overflow-hidden">
+            <div id="progressFill" class="h-full w-0 bg-gradient-to-r from-neon to-neon2"></div>
+          </div>
+        </section>
+
+        <div id="splitter" class="w-2 rounded-full bg-panel2/60 border border-border hover:bg-panel2/80 cursor-col-resize"></div>
+
+        <section id="rightPane" class="relative neon-border glass bg-panel/55 shadow-glow2 p-4 flex flex-col min-h-0 df-surface" style="flex: 1 1 0;">
+          <div class="flex items-center justify-between mb-3">
+            <div class="text-sm font-semibold">预览区</div>
+          </div>
+          <iframe id="previewFrame" class="flex-1 w-full rounded-xl border border-border min-h-0" allow="fullscreen"></iframe>
+          <div id="previewWatermark" class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <img src="/logo.svg" class="w-32 h-32 opacity-[0.04] select-none" alt="" />
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <dialog id="modal" class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 shadow-xl p-0 w-[min(980px,92vw)]">
+      <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div id="modalTitle" class="font-semibold">信息</div>
+        <button id="modalClose" class="px-3 py-1 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800">关闭</button>
+      </div>
+      <pre id="modalBody" class="mono p-4 text-sm whitespace-pre-wrap max-h-[70vh] overflow-auto"></pre>
+    </dialog>
+
+    <dialog id="advDialog" class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 shadow-xl p-0 w-[min(720px,92vw)]">
+      <div class="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div class="font-semibold">高级选项</div>
+        <button id="advClose" class="px-3 py-1 rounded-lg border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800">关闭</button>
+      </div>
+      <div class="p-4 space-y-4">
+        <div class="grid grid-cols-12 gap-3 items-center">
+          <div class="col-span-5 text-sm text-subtext">
+            目录显示层级
+            <div class="text-xs text-slate-500 mt-0.5">例如：选择 3 则显示到三级标题</div>
+          </div>
+          <div class="col-span-7">
+            <select id="advTocDepth" class="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 px-3 py-2 text-sm outline-none">
+              <option value="1">1 级（仅标题）</option>
+              <option value="2">1~2 级</option>
+              <option value="3" selected>1~3 级（推荐）</option>
+              <option value="4">1~4 级</option>
+              <option value="5">1~5 级</option>
+              <option value="6">1~6 级</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-12 gap-3 items-center">
+          <div class="col-span-5 text-sm text-subtext">
+            标题自动编号
+            <div class="text-xs text-slate-500 mt-0.5">为所有标题加上 1.2.3 序号</div>
+          </div>
+          <div class="col-span-7">
+            <label class="flex items-center gap-2 text-sm cursor-pointer">
+              <input id="advNumberSections" type="checkbox" class="accent-neon w-4 h-4" />
+              <span>开启自动编号</span>
+            </label>
+          </div>
+        </div>
+        <div class="grid grid-cols-12 gap-3 items-center">
+          <div class="col-span-5 text-sm text-subtext">
+            PDF 目录后分页
+            <div class="text-xs text-slate-500 mt-0.5">目录结束后另起一页显示正文</div>
+          </div>
+          <div class="col-span-7">
+            <label class="flex items-center gap-2 text-sm cursor-pointer">
+              <input id="advPdfBreak" type="checkbox" class="accent-neon w-4 h-4" checked />
+              <span>开启分页（仅 PDF 生效）</span>
+            </label>
+          </div>
+        </div>
+        <div class="grid grid-cols-12 gap-3 items-center">
+          <div class="col-span-5 text-sm text-subtext">
+            转换超时时间
+            <div class="text-xs text-slate-500 mt-0.5">超过此时间则中断（单位：秒）</div>
+          </div>
+          <div class="col-span-7">
+            <input id="advTimeout" class="w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 px-3 py-2 text-sm outline-none" value="300" />
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button id="advReset" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm">恢复默认</button>
+          <button id="advSave" class="px-4 py-2 rounded-xl bg-gradient-to-r from-neon to-neon2 text-black font-semibold text-sm">保存设置</button>
+        </div>
+      </div>
+    </dialog>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+      const statusEl = $("status");
+      const previewFrame = $("previewFrame");
+      const progressFill = $("progressFill");
+      const splitKey = "aidoc_split_left_pct_v1";
+      const advKey = "aidoc_adv_v1";
+      const themeKey = "aidoc_theme_v1";
+      let progressTimer = null;
+      let progressValue = 0;
+
+      function applyTheme(theme) {
+        const t = theme === "light" ? "light" : "dark";
+        document.documentElement.classList.toggle("theme-light", t === "light");
+        $("btnTheme").title = t === "light" ? "切换深色模式" : "切换浅色模式";
+        const icon = $("themeIcon");
+        if (t === "light") {
+          icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"></path>';
+        } else {
+          icon.innerHTML = '<path d="M12 2v4"></path><path d="M12 18v4"></path><path d="M4.93 4.93l2.83 2.83"></path><path d="M16.24 16.24l2.83 2.83"></path><path d="M2 12h4"></path><path d="M18 12h4"></path><path d="M4.93 19.07l2.83-2.83"></path><path d="M16.24 7.76l2.83-2.83"></path><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z"></path>';
+        }
+        try {
+          localStorage.setItem(themeKey, t);
+        } catch (e) {}
+      }
+
+      function initTheme() {
+        let t = "dark";
+        try {
+          t = localStorage.getItem(themeKey) || "dark";
+        } catch (e) {}
+        applyTheme(t);
+        $("btnTheme").onclick = () => {
+          const next = document.documentElement.classList.contains("theme-light") ? "dark" : "light";
+          applyTheme(next);
+          if ((previewFrame?.srcdoc || "").trim()) {
+            preview();
+          }
+        };
+      }
+
+      function setStatus(text, color = "text-subtext") {
+        statusEl.className = `text-xs break-all ${color}`;
+        statusEl.textContent = text;
+      }
+
+      function setProgress(pct) {
+        const p = Math.max(0, Math.min(100, Number(pct) || 0));
+        progressFill.style.width = `${p}%`;
+      }
+
+      function startProgress() {
+        stopProgress();
+        progressValue = 12;
+        setProgress(progressValue);
+        progressTimer = setInterval(() => {
+          progressValue = Math.min(90, progressValue + Math.max(0.6, (90 - progressValue) * 0.06));
+          setProgress(progressValue);
+        }, 450);
+      }
+
+      function finishProgress() {
+        stopProgress();
+        setProgress(100);
+        setTimeout(() => setProgress(0), 800);
+      }
+
+      function stopProgress() {
+        if (progressTimer) clearInterval(progressTimer);
+        progressTimer = null;
+      }
+
+      function openModal(title, body) {
+        $("modalTitle").textContent = title;
+        $("modalBody").textContent = body;
+        $("modal").showModal();
+      }
+
+      $("modalClose").onclick = () => $("modal").close();
+
+      async function apiJson(url, opts = {}) {
+        const res = await fetch(url, opts);
+        const ct = res.headers.get("content-type") || "";
+        if (ct.includes("application/json")) return await res.json();
+        return { raw: await res.text(), status: res.status };
+      }
+
+      async function refreshTemplates() {
+        const data = await apiJson("/api/templates");
+        const select = $("templateSelect");
+        const current = select.value;
+        select.innerHTML = "";
+        for (const t of data.built_in || []) {
+          const opt = document.createElement("option");
+          opt.value = t.key;
+          opt.textContent = t.name;
+          select.appendChild(opt);
+        }
+        for (const t of data.uploads || []) {
+          const opt = document.createElement("option");
+          opt.value = t.key;
+          opt.textContent = t.name;
+          select.appendChild(opt);
+        }
+        if ([...select.options].some((o) => o.value === current)) select.value = current;
+      }
+
+      $("templateUpload").addEventListener("change", async (e) => {
+        const f = e.target.files?.[0];
+        if (!f) return;
+        const suggested = f.name.replace(/\.[^/.]+$/, "");
+        const name = (prompt("请输入模板名称（用于显示）", suggested) || "").trim();
+        if (!name) {
+          e.target.value = "";
+          return setStatus("已取消上传（需要填写模板名称）", "text-orange-300");
+        }
+        setStatus("正在上传模板...");
+        const fd = new FormData();
+        fd.append("file", f);
+        fd.append("name", name);
+        const res = await apiJson("/api/templates", { method: "POST", body: fd });
+        if (res.ok) {
+          await refreshTemplates();
+          $("templateSelect").value = res.key;
+          const opt = [...$("templateSelect").options].find((o) => o.value === res.key);
+          if (opt) opt.textContent = `自定义：${res.name || name.replace(/\.[^/.]+$/, "")}`;
+          setStatus("模板上传成功", "text-green-300");
+        } else {
+          setStatus("模板上传失败", "text-red-300");
+          openModal("上传失败", JSON.stringify(res, null, 2));
+        }
+        e.target.value = "";
+      });
+
+      $("mdUpload").addEventListener("change", async (e) => {
+        const f = e.target.files?.[0];
+        if (!f) return;
+        setEditorValue(await f.text());
+        if (!$("filenameBase").value.trim()) {
+          $("filenameBase").value = f.name.replace(/\.[^/.]+$/, "");
+        }
+        setStatus(`已加载文件：${f.name}`, "text-green-300");
+        e.target.value = "";
+      });
+
+      $("btnClear").onclick = () => {
+        setEditorValue("");
+        setStatus("已清空", "text-subtext");
+        if (window._updateWordCount) window._updateWordCount("");
+        const wm = document.getElementById("previewWatermark");
+        if (wm) wm.style.display = "";
+        const iframe = document.getElementById("previewFrame");
+        if (iframe) iframe.srcdoc = "";
+      };
+
+      function loadAdv() {
+        try {
+          return JSON.parse(localStorage.getItem(advKey) || "{}") || {};
+        } catch (e) {
+          return {};
+        }
+      }
+
+      function saveAdv(v) {
+        try {
+          localStorage.setItem(advKey, JSON.stringify(v || {}));
+        } catch (e) {}
+      }
+
+      $("btnAdvanced").onclick = () => {
+        const adv = loadAdv();
+        $("advTocDepth").value = String(adv.toc_depth ?? 3);
+        $("advNumberSections").checked = Boolean(adv.number_sections ?? false);
+        $("advPdfBreak").checked = Boolean(adv.pdf_pagebreak_after_toc ?? true);
+        $("advTimeout").value = String(adv.timeout_seconds ?? 300);
+        $("advDialog").showModal();
+      };
+
+      $("advClose").onclick = () => $("advDialog").close();
+      $("advReset").onclick = () => {
+        $("advTocDepth").value = "3";
+        $("advNumberSections").checked = false;
+        $("advPdfBreak").checked = true;
+        $("advTimeout").value = "300";
+      };
+      $("advSave").onclick = () => {
+        const toc_depth = Number($("advTocDepth").value || "3");
+        const number_sections = Boolean($("advNumberSections").checked);
+        const pdf_pagebreak_after_toc = Boolean($("advPdfBreak").checked);
+        const timeout_seconds = Math.max(30, Number($("advTimeout").value || "300"));
+        saveAdv({ toc_depth, number_sections, pdf_pagebreak_after_toc, timeout_seconds });
+        $("advDialog").close();
+        setStatus("高级选项已保存", "text-green-300");
+      };
+
+      async function preview() {
+        const md = getEditorValue();
+        const wm = document.getElementById("previewWatermark");
+        if (!md.trim()) {
+          if (wm) wm.style.display = "";
+          return setStatus("内容为空", "text-red-300");
+        }
+        if (wm) wm.style.display = "none";
+        setStatus("正在渲染预览...");
+        startProgress();
+        const theme = document.documentElement.classList.contains("theme-light") ? "light" : "dark";
+        const res = await fetch("/api/preview", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ markdown: md, theme }),
+        });
+        if (res.ok) {
+          let html = await res.text();
+          const decodeHtml = (s) =>
+            (s || "")
+              .replace(/<br\s*\/?>/gi, "\n")
+              .replace(/<code\b[^>]*>/gi, "")
+              .replace(/<\/code>/gi, "")
+              .replace(/&lt;/g, "<")
+              .replace(/&gt;/g, ">")
+              .replace(/&amp;/g, "&")
+              .replace(/&quot;/g, "\"")
+              .replace(/&#39;/g, "'")
+              .trim();
+          html = html.replace(/<pre\b[^>]*>\s*<code\b[^>]*class="[^"]*mermaid[^"]*"[^>]*>([\s\S]*?)<\/code>\s*<\/pre>/gi, (_, content) => `<div class="mermaid">${decodeHtml(content)}</div>`);
+          html = html.replace(/<pre\b[^>]*class="[^"]*mermaid[^"]*"[^>]*>([\s\S]*?)<\/pre>/gi, (_, content) => `<div class="mermaid">${decodeHtml(content)}</div>`);
+          html = html.replace(/<p>\s*((?:flowchart|graph|sequenceDiagram|classDiagram|stateDiagram-v2|stateDiagram|erDiagram|journey|gantt|pie|mindmap|timeline|gitGraph)\b[\s\S]*?)<\/p>/gi, (_, content) => `<div class="mermaid">${decodeHtml(content)}</div>`);
+          const mermaidTheme = theme === "light" ? "default" : "dark";
+          const mermaidInit = `<script>(async()=>{const load=(u)=>new Promise((ok,no)=>{const s=document.createElement('script');s.src=u;s.onload=()=>ok(true);s.onerror=()=>no(new Error('load failed:'+u));document.head.appendChild(s);});const cdns=['https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js','https://unpkg.com/mermaid@10/dist/mermaid.min.js','https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js'];let loaded=false;for(const u of cdns){try{await load(u);loaded=true;break;}catch(e){}}if(!loaded||!window.mermaid){document.querySelectorAll('.mermaid').forEach(el=>{el.style.border='1px solid #f87171';el.style.padding='8px';el.innerHTML='<pre style="white-space:pre-wrap;color:#fca5a5">Mermaid 资源加载失败（云端可能屏蔽外部 CDN）。</pre>'+el.innerHTML;});return;}try{mermaid.initialize({startOnLoad:false,theme:'${mermaidTheme}',securityLevel:'loose'});await mermaid.run({querySelector:'.mermaid'});}catch(e){console.error(e);document.querySelectorAll('.mermaid').forEach(el=>{el.style.border='1px solid #f87171';el.style.padding='8px';el.innerHTML='<pre style="white-space:pre-wrap;color:#fca5a5">Mermaid 解析失败：'+String(e)+'</pre>'+el.innerHTML;});}})();<\/script>`;
+          if (html.includes("</body>")) {
+            html = html.replace("</body>", mermaidInit + "\n</body>");
+          } else {
+            html += "\n" + mermaidInit;
+          }
+          previewFrame.srcdoc = "";
+          await new Promise((r) => requestAnimationFrame(r));
+          previewFrame.srcdoc = html;
+          previewFrame.onload = () => window._bindIframeToEditorSync?.();
+          window._bindIframeToEditorSync?.();
+          setStatus("预览已更新", "text-green-300");
+          finishProgress();
+        } else {
+          setStatus("预览失败", "text-red-300");
+          openModal("预览失败", await res.text());
+          stopProgress();
+        }
+      }
+
+      $("btnPreview").onclick = preview;
+
+      async function poll(jobId) {
+        while (true) {
+          const s = await apiJson(`/api/jobs/${jobId}`);
+          if (s.status === "succeeded") return s;
+          if (s.status === "failed") throw new Error(s.error || "转换失败");
+          await new Promise((r) => setTimeout(r, 800));
+        }
+      }
+
+      async function triggerBrowserDownload(url, filename) {
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      }
+
+      async function convert(formats) {
+        const md = getEditorValue();
+        if (!md.trim()) return setStatus("内容为空", "text-red-300");
+        const template = $("templateSelect").value;
+        formats = (formats && formats.length ? formats : ["docx"]).map((x) => String(x || "").toLowerCase());
+        const filename = ($("filenameBase").value || "").trim();
+        const adv = loadAdv();
+        const tocDepth = adv.toc_depth ?? 3;
+        const numberSections = adv.number_sections ?? false;
+        const pdfPagebreakAfterToc = adv.pdf_pagebreak_after_toc ?? true;
+        const timeoutSeconds = adv.timeout_seconds ?? 300;
+
+        setStatus("提交转换任务...");
+        startProgress();
+        const res = await apiJson("/api/convert", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            markdown: md,
+            template,
+            formats,
+            filename,
+            toc_depth: tocDepth,
+            number_sections: numberSections,
+            pdf_pagebreak_after_toc: pdfPagebreakAfterToc,
+            timeout_seconds: timeoutSeconds,
+          }),
+        });
+        const jobId = res.job_id;
+        setStatus(`任务执行中：${jobId}`);
+        try {
+          const st = await poll(jobId);
+          setStatus("转换完成，开始保存...", "text-green-300");
+          const base = filename || "output";
+          for (const fmt of st.outputs || []) {
+            const url = `/api/jobs/${jobId}/download/${fmt}`;
+            const name = `${base}.${fmt}`;
+            await triggerBrowserDownload(url, name);
+          }
+          setStatus("已完成", "text-green-300");
+          finishProgress();
+        } catch (e) {
+          setStatus("转换失败", "text-red-300");
+          openModal("转换失败", String(e));
+          stopProgress();
+        }
+      }
+
+      $("btnExportWord").onclick = () => convert(["docx"]);
+      $("btnExportPdf").onclick = () => convert(["pdf"]);
+
+      function isMdName(name) {
+        const n = (name || "").toLowerCase();
+        return n.endsWith(".md") || n.endsWith(".markdown") || n.endsWith(".mdown");
+      }
+
+      window.addEventListener("dragover", (e) => e.preventDefault());
+      window.addEventListener("drop", async (e) => {
+        e.preventDefault();
+        const f = e.dataTransfer?.files?.[0];
+        if (!f) return;
+        if (!isMdName(f.name)) return setStatus("仅支持拖拽 .md 文件", "text-orange-300");
+        setEditorValue(await f.text());
+        if (!$("filenameBase").value.trim()) {
+          $("filenameBase").value = f.name.replace(/\.[^/.]+$/, "");
+        }
+        setStatus(`已拖入文件：${f.name}`, "text-green-300");
+      });
+
+      window.addEventListener("keydown", (e) => {
+        const isMac = navigator.platform.toLowerCase().includes("mac");
+        const mod = isMac ? e.metaKey : e.ctrlKey;
+        if (!mod) return;
+        if (e.key === "Enter") {
+          e.preventDefault();
+          preview();
+        }
+        if (e.key.toLowerCase() === "s") {
+          e.preventDefault();
+          convert();
+        }
+      });
+
+      function getEditorValue() {
+        const cm = window._cmView || null;
+        if (cm) return cm.state.doc.toString();
+        return $("fallbackTextarea").value || "";
+      }
+      function setEditorValue(val) {
+        const cm = window._cmView || null;
+        val = val || "";
+        $("fallbackTextarea").value = val;
+        if (cm) {
+          cm.dispatch({ changes: { from: 0, to: cm.state.doc.length, insert: val } });
+        }
+        if (window._updateWordCount) window._updateWordCount(val);
+        if (window._schedulePreview) window._schedulePreview(val);
+      }
+
+      function enableFallbackTextarea() {
+        const ta = $("fallbackTextarea");
+        const cmRoot = document.getElementById("cmRoot");
+        cmRoot.classList.add("hidden");
+        ta.classList.remove("hidden");
+      }
+
+      function initSplit() {
+        const wrap = document.getElementById("splitWrap");
+        const left = document.getElementById("leftPane");
+        const splitter = document.getElementById("splitter");
+        let pct = 50;
+        try {
+          pct = Number(localStorage.getItem(splitKey) || "50") || 50;
+        } catch (e) {}
+        pct = Math.max(30, Math.min(70, pct));
+        left.style.flex = `0 0 ${pct}%`;
+
+        let dragging = false;
+        splitter.addEventListener("mousedown", () => {
+          dragging = true;
+          document.body.style.cursor = "col-resize";
+        });
+        window.addEventListener("mouseup", () => {
+          dragging = false;
+          document.body.style.cursor = "";
+        });
+        window.addEventListener("mousemove", (e) => {
+          if (!dragging) return;
+          const rect = wrap.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const p = (x / rect.width) * 100;
+          const clamped = Math.max(30, Math.min(70, p));
+          left.style.flex = `0 0 ${clamped}%`;
+          try {
+            localStorage.setItem(splitKey, String(clamped));
+          } catch (e) {}
+        });
+      }
+
+      initTheme();
+      initSplit();
+      refreshTemplates();
+
+      const _SYNC_KEY = "aidoc_sync_scroll_v1";
+      let _previewDebounceTimer = null;
+      window._syncScrollEnabled = localStorage.getItem(_SYNC_KEY) === "true";
+      window._syncLock = false;
+      window._syncPollTimer = null;
+
+      function updateWordCount(text) {
+        const wc = document.getElementById("wordCount");
+        if (!wc) return;
+        const chars = text.length;
+        const cjk = (text.match(/[\u4e00-\u9fff]/g) || []).length;
+        const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+        wc.textContent = `${words} words · ${chars + cjk} chars`;
+      }
+
+      function clearPreviewPanel() {
+        const wm = document.getElementById("previewWatermark");
+        if (wm) wm.style.display = "";
+        if (previewFrame) previewFrame.srcdoc = "";
+      }
+
+      function schedulePreview(text) {
+        clearTimeout(_previewDebounceTimer);
+        _previewDebounceTimer = setTimeout(() => {
+          const current = getEditorValue();
+          window._updateWordCount?.(current);
+          if (!current.trim()) {
+            clearPreviewPanel();
+            return;
+          }
+          window.preview?.().catch(() => {});
+        }, 500);
+      }
+
+      function updateSyncButtonState() {
+        const b = document.getElementById("btnSyncScroll");
+        if (!b) return;
+        if (window._syncScrollEnabled) {
+          b.classList.add("bg-neon/20", "border-neon", "text-neon");
+          b.classList.remove("bg-panel2/60");
+          b.setAttribute("aria-pressed", "true");
+        } else {
+          b.classList.remove("bg-neon/20", "border-neon", "text-neon");
+          b.classList.add("bg-panel2/60");
+          b.setAttribute("aria-pressed", "false");
+        }
+      }
+
+      function bindSyncButton() {
+        const btn = document.getElementById("btnSyncScroll");
+        if (!btn || btn.dataset.bound === "1") return;
+        btn.dataset.bound = "1";
+        btn.addEventListener("click", () => {
+          window._syncScrollEnabled = !window._syncScrollEnabled;
+          try { localStorage.setItem(_SYNC_KEY, String(window._syncScrollEnabled)); } catch (e) {}
+          updateSyncButtonState();
+          setStatus(window._syncScrollEnabled ? "同步滚动：已开启" : "同步滚动：已关闭", "text-subtext");
+          if (window._syncScrollEnabled) window._bindIframeToEditorSync?.();
+        });
+        updateSyncButtonState();
+      }
+
+      function bindIframeToEditorSync() {
+        const iframe = document.getElementById("previewFrame");
+        if (!iframe || !iframe.contentWindow) return;
+        const syncFromPreview = () => {
+          if (!window._syncScrollEnabled || window._syncLock) return;
+          const iframeDoc = iframe.contentWindow.document;
+          if (!iframeDoc) return;
+          const root = iframeDoc.scrollingElement || iframeDoc.documentElement || iframeDoc.body;
+          const pm = (root?.scrollHeight || 0) - iframe.contentWindow.innerHeight;
+          const cmEl = document.querySelector(".cm-scroller");
+          const ta = $("fallbackTextarea");
+          const editorEl = cmEl || ta;
+          if (!editorEl) return;
+          const em = editorEl.scrollHeight - editorEl.clientHeight;
+          if (pm <= 0 || em <= 0) return;
+          window._syncLock = true;
+          const top = iframe.contentWindow.scrollY || root.scrollTop || 0;
+          editorEl.scrollTop = (top / pm) * em;
+          setTimeout(() => { window._syncLock = false; }, 60);
+        };
+        iframe.contentWindow.onscroll = syncFromPreview;
+        const iframeDoc = iframe.contentWindow.document;
+        if (iframeDoc) iframeDoc.onscroll = syncFromPreview;
+        if (!window._syncPollTimer) {
+          window._syncPollTimer = setInterval(() => {
+            if (!window._syncScrollEnabled) return;
+            syncFromPreview();
+          }, 120);
+        }
+      }
+
+      function bindEditorToPreviewSync() {
+        const onEditorScroll = () => {
+          if (!window._syncScrollEnabled || window._syncLock) return;
+          const iframe = document.getElementById("previewFrame");
+          const iframeDoc = iframe?.contentWindow?.document;
+          if (!iframe || !iframeDoc) return;
+          const cmEl = document.querySelector(".cm-scroller");
+          const ta = $("fallbackTextarea");
+          const editorEl = cmEl || ta;
+          if (!editorEl) return;
+          const em = editorEl.scrollHeight - editorEl.clientHeight;
+          const root = iframeDoc.scrollingElement || iframeDoc.documentElement || iframeDoc.body;
+          const pm = (root?.scrollHeight || 0) - iframe.contentWindow.innerHeight;
+          if (em <= 0 || pm <= 0) return;
+          window._syncLock = true;
+          const top = (editorEl.scrollTop / em) * pm;
+          iframe.contentWindow.scrollTo({ top, behavior: "auto" });
+          if (root) root.scrollTop = top;
+          setTimeout(() => { window._syncLock = false; }, 60);
+        };
+
+        const cmEl = document.querySelector(".cm-scroller");
+        if (cmEl && cmEl.dataset.syncBound !== "1") {
+          cmEl.dataset.syncBound = "1";
+          cmEl.addEventListener("scroll", onEditorScroll, { passive: true });
+        }
+        const ta = $("fallbackTextarea");
+        if (ta && ta.dataset.syncBound !== "1") {
+          ta.dataset.syncBound = "1";
+          ta.addEventListener("scroll", onEditorScroll, { passive: true });
+        }
+      }
+
+      function bindFallbackTypingEvents() {
+        const ta = $("fallbackTextarea");
+        if (!ta || ta.dataset.bound === "1") return;
+        ta.dataset.bound = "1";
+        const handler = () => {
+          const text = ta.value || "";
+          window._updateWordCount?.(text);
+          window._schedulePreview?.(text);
+        };
+        ta.addEventListener("input", handler);
+        ta.addEventListener("paste", () => setTimeout(handler, 0));
+        ta.addEventListener("cut", () => setTimeout(handler, 0));
+      }
+
+      window._updateWordCount = updateWordCount;
+      window._schedulePreview = schedulePreview;
+      window._bindSyncButton = bindSyncButton;
+      window._bindIframeToEditorSync = bindIframeToEditorSync;
+      window._bindEditorToPreviewSync = bindEditorToPreviewSync;
+      window._bindFallbackTypingEvents = bindFallbackTypingEvents;
+      bindSyncButton();
+      bindEditorToPreviewSync();
+      bindFallbackTypingEvents();
+    </script>
+
+    <script type="module">
+      const cmRoot = document.getElementById("cmRoot");
+      const ta = document.getElementById("fallbackTextarea");
+
+      const startDoc =
+        "# 在此粘贴 Markdown 内容\n\n" +
+        "支持：\n" +
+        "· 拖拽 .md 文件到页面\n" +
+        "· Ctrl+Enter 预览\n" +
+        "· Ctrl+S 导出 Word / PDF\n";
+
+      window._updateWordCount?.(startDoc);
+
+      const initial = (ta.value || "").trim() || startDoc;
+      ta.value = initial;
+
+      window._cmInit = async () => {
+        try {
+          const [viewMod, stateMod, basicSetupMod, markdownMod, oneDarkMod] = await Promise.all([
+            import("https://esm.sh/@codemirror/view@6.28.0"),
+            import("https://esm.sh/@codemirror/state@6.4.1"),
+            import("https://esm.sh/@codemirror/basic-setup@0.20.0"),
+            import("https://esm.sh/@codemirror/lang-markdown@6.2.5"),
+            import("https://esm.sh/@codemirror/theme-one-dark@6.1.2"),
+          ]);
+
+          const { EditorView, lineNumbers, highlightActiveLineGutter } = viewMod;
+          const { EditorState } = stateMod;
+          const { basicSetup } = basicSetupMod;
+          const { markdown } = markdownMod;
+          const { oneDark } = oneDarkMod;
+
+          const myTheme = EditorView.theme({
+            "&": { height: "100%" },
+            ".cm-content": { fontFamily: '"Microsoft YaHei", "微软雅黑", system-ui, sans-serif', fontSize: "13px" },
+            ".cm-scroller": { fontFamily: '"Microsoft YaHei", "微软雅黑", system-ui, sans-serif' },
+          }, { dark: true });
+
+          const syncExt = EditorView.updateListener.of((v) => {
+            if (v.docChanged) {
+              const text = v.state.doc.toString();
+              ta.value = text;
+              requestAnimationFrame(() => {
+                window._updateWordCount?.(text);
+                window._schedulePreview?.(text);
+              });
+            }
+          });
+
+          window._cmView = new EditorView({
+            state: EditorState.create({
+              doc: initial,
+              extensions: [lineNumbers(), highlightActiveLineGutter(), basicSetup, markdown(), oneDark, myTheme, syncExt],
+            }),
+            parent: cmRoot,
+          });
+          cmRoot.classList.remove("hidden");
+          ta.classList.add("hidden");
+          window._bindSyncButton?.();
+          window._bindEditorToPreviewSync?.();
+          setTimeout(() => window.preview?.().catch(() => {}), 300);
+        } catch (e) {
+          window.enableFallbackTextarea?.();
+          window._bindFallbackTypingEvents?.();
+          window._bindEditorToPreviewSync?.();
+        }
+      };
+
+      window._cmInit();
+    </script>
+    <footer class="df-footer text-center text-xs py-3 mt-0">
+      <span>© 2026 DocForge</span>
+    </footer>
+  </body>
+</html>
